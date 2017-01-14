@@ -25,9 +25,19 @@ function test() {
 
 
 */
+var items = [
+  'Apple',
+  'Orange',
+  'Melon'
+];
 
   $(function() {
-    $('p.test-class').prepend($('<h1></h1>').text(message));
+    var ul = $('<ul></ul>');
+    for (var i = 0; i < items.length; i++) {
+      var li = $('<li></li>').text(items[i]);
+      ul.append(li);
+    }
+    $('#sandbox').append(ul);
   });
 
 })(jQuery);
