@@ -26,18 +26,20 @@ function test() {
 
 */
 var items = [
-  'Apple',
-  'Orange',
-  'Melon'
+  [ 'Apple', 'Orange','Melon'],
+  [ 'AA' , 'AB' , 'AC' ],
+  [ 'BA' , 'BB' , 'BC' ]
 ];
 
-  $(function() {
+$(function() {
     var ul = $('<ul></ul>');
+    for (var i = 0; )
     for (var i = 0; i < items.length; i++) {
-      var li = $('<li></li>').text(items[i]);
+      var li = $('<li></li>').text(items[i][j]);
       ul.append(li);
     }
     $('#sandbox').append(ul);
   });
-
 })(jQuery);
+
+$(function()
