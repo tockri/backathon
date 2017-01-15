@@ -31,7 +31,7 @@
 
   const material = {
     kind: 'phong',
-    color: $colors.mesh
+    color: $colors.mesh,
   };
   const pinMaterial = {
     kind: 'basic',
@@ -85,8 +85,12 @@
     }
 
     var c = makeCylinder(cr, 1, _extends({}, {
-      material: material,
-      position: [0, 0.1, 0],
+      material: {
+        kind: 'phong',
+        color: 'white',
+        map: WHS.texture('./gear_texture.jpg'),
+      },
+      position: [0, 0, 0],
       mass: 0.01,
     }, options));
     for (var i = 0; i < z; i++) {
@@ -111,14 +115,14 @@
     constraints: [],
     // 画面初期化
     initialize: function() {
-      var button = $('<button type="button">Start</button>');
+      var button = $('<button type="button">Scene2</button>');
       button.css({
         position: 'absolute',
         right: 0,
         bottom: 0
       });
       button.click(function() {
-        App.restart();
+        App.scene2();
       });
       $('body').append(button);
     },
@@ -126,14 +130,18 @@
     start: function() {
       var base = makeCylinder(30, 1, {
         position: [0, 0, 0],
-        mass: 1
+        mass: 0,
+        material: {
+          transparent: true,
+          opacity: 0
+        }
       });
       this.add(base);
 
       var g1 = new Gear(0.2, 10);
-      g1.shape.position.set(0, 1, 0);
+      g1.shape.position.set(0, 0.5, 0);
       var secPin = makeBox(20, 0.1, 0.1, {
-        position:[9, 10, 0],
+        position:[9, 5.5, 0],
         material: pinMaterial
       });
       g1.shape.add(secPin);
@@ -146,7 +154,7 @@
 
 
       var g2 = new Gear(0.2, 75);
-      g2.shape.position.set(g1.d + g2.d, 1, 0);
+      g2.shape.position.set(g1.d + g2.d, 0.5, 0);
       g2.shape.rotation.set(0, Math.PI / g2.z, 0);
       var pg2 = g2.shape.position;
       var g3 = new Gear(0.1888, 10);
@@ -163,14 +171,11 @@
 
       g4.shape.add(g5.shape);
       var minPin = makeBox(16, 0.15, 0.15, {
-        position: [8, 10, 0],
-        // rotation: [0, Math.PI / 3, 0],
+        position: [8, 5.5, 0],
         material: pinMaterial
       });
       g4.shape.add(minPin);
       this.addGear(base, g4);
-      //g4.shape.rotation.set(0, 0.2, 0);
-      //g4.shape.position.y = 20;
 
 
       var g6 = new Gear(0.2, 40);
@@ -180,33 +185,41 @@
       g7.shape.position.y = 1.5;
       g6.shape.add(g7.shape);
       this.addGear(base, g6);
-      //g6.shape.rotation.set(0, 0.2, 0);
-      //g6.shape.position.y = 40;
 
       var g8 = new Gear(0.25, 30);
       g8.shape.position.set(0, 5.5, 0);
       g8.shape.rotation.set(0, Math.PI / 3, 0);
       var hourPin = makeBox(12, 0.3, 0.3, {
-        position: [6, 8.5, 0],
-        // rotation: [0, Math.PI / -3, 0],
+        position: [6, 4, 0],
         material: pinMaterial
       });
       g8.shape.add(hourPin);
       this.addGear(base, g8);
 
-
-
-
-
       var l = new WHS.Loop(function(clock) {
-
         g1.shape.rotation.y -= 0.001;
       });
       l.start(world);
-
-
-
-
+    },
+    scene2: function() {
+      var frame = new WHS.Model({
+        geometry: {
+          path: './frame_model.json',
+        },
+        mass: 0,
+        material: {
+          kind: 'phong',
+          // shading: THREE.SmoothShading,
+          map: WHS.texture('./frame_texture.jpg'),
+          // side: THREE.DoubleSide,
+          // useCustomMaterial: true
+        },
+        position: {
+          y: 0
+        },
+        scale: [4.8, 4, 4.8]
+      });
+      this.add(frame);
     },
     // 再開
     restart: function() {

@@ -12,41 +12,36 @@
     autoresize: "window",
     gravity: [0, -10, 0],
     camera: {
-      position: [0, 50, 20]
+      position: [0, 20, 10]
     },
     rendering: {
       background: {
-        color: 0x446688
+        color: 0x162129
       },
       renderer: {
-        antialias: false
+        antialias: true
       }
     },
     shadowmap: {
-      //type: THREE.PCFSoftShadowMap
+      type: THREE.PCFSoftShadowMap
     },
-    // helpers: {
-    //   grid: {
-    //     size: 100,
-    //     step: 100,
-    //     color1: 0xff0000
-    //   },
-    //
-    //   axis: {
-    //     size: 100
-    //   }
-    // }
+    helpers: {
+      grid: {
+        size: 100,
+        step: 100,
+        color1: 0xff0000
+      },
+
+      axis: {
+        size: 100
+      }
+    }
   });
 
   addBoxPlane(world, 250).then(function (o) {
-    o.material.transparent = true;
-    o.material.opacity = 0;
     return o.position.y = -0.5;
   });
-  addBasicLights(world, 0.8, [40, 8, 20], 400);
-  addBasicLights(world, 0.8, [-40, 8, 20], 400);
-  addBasicLights(world, 0.8, [0, 1, 20], 400);
-
+  addBasicLights(world, 0.5, [20, 20, 20], 400);
   global.world = world;
   global.$colors = $colors;
 
