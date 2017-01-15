@@ -22,7 +22,7 @@ function addAmbient(world, intensity) {
 // 光源を追加する
 function addBasicLights(world) {
   var intensity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
-  var position = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 10, 10];
+  var position = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [10, 10, 10];
   var distance = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
 
   addAmbient(world, 1 - intensity);

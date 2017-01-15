@@ -12,7 +12,7 @@
     autoresize: "window",
     gravity: [0, -10, 0],
     camera: {
-      position: [0, 20, 20]
+      position: [0, 50, 20]
     },
     rendering: {
       background: {
@@ -41,7 +41,7 @@
   addBoxPlane(world, 250).then(function (o) {
     return o.position.y = -0.5;
   });
-  addBasicLights(world);
+  addBasicLights(world, 0.5, [40, 20, 20], 400);
   global.world = world;
   global.$colors = $colors;
 
