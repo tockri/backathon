@@ -23,25 +23,28 @@
       }
     },
     shadowmap: {
-      type: THREE.PCFSoftShadowMap
+      //type: THREE.PCFSoftShadowMap
     },
-    helpers: {
-      grid: {
-        size: 100,
-        step: 100,
-        color1: 0xff0000
-      },
-
-      axis: {
-        size: 100
-      }
-    }
+    // helpers: {
+    //   grid: {
+    //     size: 100,
+    //     step: 100,
+    //     color1: 0xff0000
+    //   },
+    //
+    //   axis: {
+    //     size: 100
+    //   }
+    // }
   });
 
   addBoxPlane(world, 250).then(function (o) {
     return o.position.y = -0.5;
   });
-  addBasicLights(world, 0.5, [40, 20, 20], 400);
+  addBasicLights(world, 0.8, [40, 8, 20], 400);
+  addBasicLights(world, 0.8, [-40, 8, 20], 400);
+  addBasicLights(world, 0.8, [0, 1, 20], 400);
+
   global.world = world;
   global.$colors = $colors;
 
