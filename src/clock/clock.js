@@ -4,22 +4,6 @@
   var world = global.world;
   var $colors = global.$colors;
 
-  function makeSphere(radius, options) {
-    var sp = new WHS.Sphere(_extends({}, {
-      geometry: {
-        radius: radius,
-        widthSegments: 32,
-        heightSegments: 32
-      },
-      mass: 0.1, // Mass of physics object.
-      material: {
-        color: $colors.mesh,
-        kind: 'phong'
-      }
-    }, options));
-    return sp;
-  }
-
   function makeBox(width, height, depth, options) {
     var box = new WHS.Box(_extends({}, {
       geometry: [width, height, depth],
@@ -30,6 +14,18 @@
       },
     }, options));
     return box;
+  }
+
+  function makeCylinder(radius, height, options) {
+    return new WHS.Cylinder(_extends({}, {
+      geometry: {
+        radiusTop: radius,
+        radiusBottom: radius,
+        height: height
+      },
+      mass: 1,
+      material: material
+    }, options));
   }
 
 
@@ -54,8 +50,8 @@
     var cr = d - m * 2.7; // Cylinderの半径
     // 歯の形
     var t1 = {
-      x: cr * Math.cos(a / 3) * 0.9,
-      y: cr * Math.sin(a / 3) * 0.9
+      x: cr * Math.cos(a / 3) * 0.95,
+      y: cr * Math.sin(a / 3) * 0.95
     };
     var t2 = {
       x: d * Math.cos(a / 6),
@@ -88,20 +84,11 @@
       });
     }
 
-    function cylinder() {
-      return new WHS.Cylinder(_extends({}, {
-        geometry: {
-          radiusTop: cr,
-          radiusBottom: cr,
-          height: 1
-        },
-        mass: 1,
-        material: material,
-        position: [0, 0.1, 0]
-      }, options));
-    }
-
-    var c = cylinder();
+    var c = makeCylinder(cr, 1, _extends({}, {
+      material: material,
+      position: [0, 0.1, 0],
+      mass: 0.01,
+    }, options));
     for (var i = 0; i < z; i++) {
       c.add(teeth(i));
     }
@@ -137,38 +124,47 @@
     },
     // 開始
     start: function() {
-      var base = makeBox(40, 1, 40, {
-        position: [0, 0, 0]
+      var base = makeCylinder(30, 1, {
+        position: [0, 0, 0],
+        mass: 1
       });
       this.add(base);
 
       var g1 = new Gear(0.2, 10);
       g1.shape.position.set(0, 1, 0);
-      var secPin = makeBox(10, 0.1, 0.1, {
-        position:[5, 10, 0],
+      var secPin = makeBox(20, 0.1, 0.1, {
+        position:[9, 10, 0],
         material: pinMaterial
       });
       g1.shape.add(secPin);
+      /*g1.shape.add(makeCylinder(1, 10, {
+        mass: 0.1,
+        position: [0, 10, 0],
+        material: material
+      }));*/
       this.addGear(base, g1);
 
 
-      var g2 = new Gear(0.2, 30);
+      var g2 = new Gear(0.2, 75);
       g2.shape.position.set(g1.d + g2.d, 1, 0);
       g2.shape.rotation.set(0, Math.PI / g2.z, 0);
       var pg2 = g2.shape.position;
-      var g3 = new Gear(0.2, 10);
+      var g3 = new Gear(0.1888, 10);
       g3.shape.position.y = 1.5;
       g2.shape.add(g3.shape);
       this.addGear(base, g2);
 
 
-      var g4 = new Gear(0.2, 30);
+      var g4 = new Gear(0.1888, 80);
       g4.shape.position.set(0, 2.5, 0);
+      g4.shape.rotation.set(0, -Math.PI / 3, 0);
       var g5 = new Gear(0.2, 10);
       g5.shape.position.y = 1.5;
+
       g4.shape.add(g5.shape);
-      var minPin = makeBox(8, 0.15, 0.15, {
-        position: [4, 10, 0],
+      var minPin = makeBox(16, 0.15, 0.15, {
+        position: [8, 10, 0],
+        // rotation: [0, Math.PI / 3, 0],
         material: pinMaterial
       });
       g4.shape.add(minPin);
@@ -177,20 +173,22 @@
       //g4.shape.position.y = 20;
 
 
-      var g6 = new Gear(0.2, 30);
-      var pg6 = pointR(g1.d + g2.d, Math.PI / 3);
+      var g6 = new Gear(0.2, 40);
+      var pg6 = pointR(g5.d + g6.d, Math.PI / 3);
       g6.shape.position.set(pg6.x, 4, pg6.y);
-      var g7 = new Gear(0.2, 10);
+      var g7 = new Gear(0.25, 10);
       g7.shape.position.y = 1.5;
       g6.shape.add(g7.shape);
       this.addGear(base, g6);
       //g6.shape.rotation.set(0, 0.2, 0);
       //g6.shape.position.y = 40;
 
-      var g8 = new Gear(0.2, 30);
+      var g8 = new Gear(0.25, 30);
       g8.shape.position.set(0, 5.5, 0);
-      var hourPin = makeBox(6, 0.3, 0.3, {
-        position: [3, 10, 0],
+      g8.shape.rotation.set(0, Math.PI / 3, 0);
+      var hourPin = makeBox(12, 0.3, 0.3, {
+        position: [6, 8.5, 0],
+        // rotation: [0, Math.PI / -3, 0],
         material: pinMaterial
       });
       g8.shape.add(hourPin);
@@ -202,7 +200,7 @@
 
       var l = new WHS.Loop(function(clock) {
 
-        g2.shape.rotation.y += 0.0005;
+        g1.shape.rotation.y -= 0.001;
       });
       l.start(world);
 
@@ -245,10 +243,6 @@
         new THREE.Vector3(0, 1, 0)
       );
       App.addConstraint(c1);
-      // c1.setLinearLowerLimit(new THREE.Vector3(0, 0, 0));
-      // c1.setLinearUpperLimit(new THREE.Vector3(0, 0, 0));
-      // c1.setAngularLowerLimit(new THREE.Vector3(0, -Infinity, 0));
-      // c1.setAngularUpperLimit(new THREE.Vector3(0, Infinity, 0));
     }
   };
 
